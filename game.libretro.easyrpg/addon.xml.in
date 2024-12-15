@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<addon id="game.libretro.easyrpg"
+		name="easyrpg"
+		version="0.0.0.0"
+		provider-name="Remdy">
+	<requires>
+		<import addon="game.libretro" version="1.0.0"/>
+		<import addon="game.controller.default" version="1.0.0"/>
+	</requires>
+	<extension point="kodi.gameclient"
+			library_@PLATFORM@="@LIBRARY_FILENAME@">
+		<platforms></platforms>
+		<extensions></extensions>
+		<supports_vfs>false</supports_vfs>
+		<supports_standalone>false</supports_standalone>
+		<requires_opengl>false</requires_opengl>
+	</extension>
+	<extension point="xbmc.addon.metadata">
+		<license>MIT</license>
+		<platform>@PLATFORM@</platform>
+		<source>https://github.com/kodi-game/game.libretro.easyrpg</source>
+		<summary lang="en_GB">easyrpg</summary>
+		<description lang="en_GB"> EasyRPG is a role playing game engine compatible with RPG Maker 2000 and 2003.</description>
+	</extension>
+</addon>
