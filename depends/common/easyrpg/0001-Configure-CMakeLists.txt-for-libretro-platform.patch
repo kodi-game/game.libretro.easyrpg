@@ -1,0 +1,89 @@
+From b0ce508ccae996aef73d35d913f8a92423bc0939 Mon Sep 17 00:00:00 2001
+From: Garrett Brown <themagnificentmrb@gmail.com>
+Date: Sat, 14 Dec 2024 16:31:18 -0800
+Subject: [PATCH] Configure CMakeLists.txt for libretro platform
+
+---
+ CMakeLists.txt | 26 ++++++--------------------
+ 1 file changed, 6 insertions(+), 20 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f63d4ffa..69e1e84e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -561,7 +561,7 @@ elseif(NINTENDO_WIIU)
+ elseif(AMIGA)
+ 	set(PLAYER_TARGET_PLATFORM "SDL1" CACHE STRING "Platform to compile for.")
+ else()
+-	set(PLAYER_TARGET_PLATFORM "SDL2" CACHE STRING "Platform to compile for. Options: SDL2 SDL1 libretro")
++	set(PLAYER_TARGET_PLATFORM "libretro" CACHE STRING "Platform to compile for. Options: SDL2 SDL1 libretro")
+ 	set_property(CACHE PLAYER_TARGET_PLATFORM PROPERTY STRINGS SDL2 SDL1 libretro)
+ endif()
+ set(PLAYER_BUILD_EXECUTABLE ON)
+@@ -813,7 +813,7 @@ set(CMAKE_XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "")
+ set(CMAKE_XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER "org.easyrpg.player")
+ 
+ # liblcf
+-option(PLAYER_BUILD_LIBLCF "Instead of detecting liblcf, clone liblcf into lib/liblcf and build it along with the Player. This is convenient for development." OFF)
++option(PLAYER_BUILD_LIBLCF "Instead of detecting liblcf, clone liblcf into lib/liblcf and build it along with the Player. This is convenient for development." ON)
+ set(PLAYER_BUILD_LIBLCF_GIT "https://github.com/EasyRPG/liblcf.git" CACHE STRING "Git repository of liblcf to clone. Requires PLAYER_BUILD_LIBLCF=ON.")
+ set(PLAYER_BUILD_LIBLCF_BRANCH "master" CACHE STRING "Branch of the liblcf repository to clone. Requires PLAYER_BUILD_LIBLCF=ON.")
+ 
+@@ -1181,15 +1181,6 @@ if(${PLAYER_BUILD_EXECUTABLE} AND ${PLAYER_TARGET_PLATFORM} MATCHES "^SDL[12]$"
+ 		install(TARGETS ${EXE_NAME} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+ 	endif()
+ 
+-	if(UNIX)
+-		# Install desktop entry, icons and metainfo
+-		install(FILES resources/unix/easyrpg-player.desktop DESTINATION ${CMAKE_INSTALL_DATADIR}/applications)
+-		install(FILES resources/unix/icon-48.png RENAME easyrpg-player.png DESTINATION ${CMAKE_INSTALL_DATADIR}/pixmaps) # legacy
+-		install(FILES resources/unix/icon-48.png RENAME easyrpg-player.png DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/48x48/apps)
+-		install(FILES resources/unix/easyrpg-player.svg DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/scalable/apps)
+-		install(FILES resources/unix/easyrpg-player.metainfo.xml DESTINATION ${CMAKE_INSTALL_DATADIR}/metainfo)
+-	endif()
+-
+ 	if(MSVC)
+ 		install(FILES $<TARGET_PDB_FILE:${EXE_NAME}> DESTINATION ${CMAKE_INSTALL_BINDIR} OPTIONAL)
+ 	endif()
+@@ -1321,7 +1312,7 @@ elseif(${PLAYER_TARGET_PLATFORM} MATCHES "^(psvita|3ds|switch|wii)$" OR NINTENDO
+ 	include(CPack)
+ else() # library
+ 	if(${PLAYER_TARGET_PLATFORM} STREQUAL "libretro")
+-		add_library(easyrpg_libretro
++		add_library(easyrpg_libretro SHARED
+ 			src/platform/libretro/audio.cpp
+ 			src/platform/libretro/audio.h
+ 			src/platform/libretro/clock.cpp
+@@ -1337,11 +1328,14 @@ else() # library
+ 		)
+ 		target_link_libraries(easyrpg_libretro ${PROJECT_NAME})
+ 		set_target_properties(easyrpg_libretro PROPERTIES PREFIX "")
++		set_target_properties(easyrpg_libretro PROPERTIES DEBUG_POSTFIX "")
+ 		set(PLAYER_TEST_LIBRARIES "easyrpg_libretro")
+ 
+ 		if(WIN32)
+ 			set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT easyrpg_libretro)
+ 		endif()
++
++		install(TARGETS easyrpg_libretro DESTINATION ${CMAKE_INSTALL_PREFIX})
+ 	elseif(ANDROID AND ${PLAYER_TARGET_PLATFORM} STREQUAL "SDL2")
+ 		add_library(easyrpg_android
+ 			src/platform/android/android.cpp
+@@ -1396,14 +1390,6 @@ else()
+ 	endif()
+ endif()
+ 
+-# bash completion
+-set(BASHCOMPLETION_STATUS "Unavailable")
+-find_package(bash-completion QUIET)
+-if(BASH_COMPLETION_FOUND OR (UNIX AND NOT APPLE))
+-	set(BASHCOMPLETION_STATUS "Available")
+-	install(FILES resources/unix/bash-completion/easyrpg-player DESTINATION "${CMAKE_INSTALL_DATADIR}/bash-completion/completions")
+-endif()
+-
+ # Doxygen
+ # Handled as extra target "doc"
+ find_package(Doxygen)
+-- 
+2.43.0
+
