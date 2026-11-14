@@ -1,1 +1,1 @@
-easyrpg https://github.com/EasyRPG/Player/archive/65478ef6d23e32f4f830244eed28334a6975b240.tar.gz
+easyrpg https://github.com/EasyRPG/Player/archive/7db2bb50a28c8413b55c0832aaa31a04fb9e2efb.tar.gz
