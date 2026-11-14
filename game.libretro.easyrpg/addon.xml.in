@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon id="game.libretro.easyrpg"
 		name="RPG Maker 2000/2003 (EasyRPG)"
-		version="0.8.0.2"
+		version="0.8.1.2"
 		provider-name="EasyRPG team">
 	<requires>
 		<import addon="game.libretro" version="1.0.0"/>
@@ -9,11 +9,13 @@
 	</requires>
 	<extension point="kodi.gameclient"
 			library_@PLATFORM@="@LIBRARY_FILENAME@">
-		<platforms></platforms>
-		<extensions>ldb|zip|easyrpg</extensions>
+		<platforms>RPG Maker 2000/2003</platforms>
+		<extensions>ldb|zip|lzh|easyrpg</extensions>
 		<supports_vfs>false</supports_vfs>
 		<supports_standalone>false</supports_standalone>
-		<requires_opengl>false</requires_opengl>
+		<supports_disc_control>false</supports_disc_control>
+		<libretro_core>easyrpg_libretro</libretro_core>
+		<savestate_features>null</savestate_features>
 	</extension>
 	<extension point="xbmc.addon.metadata">
 		<license>GPLv3</license>
